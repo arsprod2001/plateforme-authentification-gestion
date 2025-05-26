@@ -1,0 +1,6 @@
+# Ignorer les fichiers d'environnement dans tous les sous-dossiers
+**/.env
+**/.env.local
+
+# Ignorer tous les dossiers node_modules
+**/node_modules/
