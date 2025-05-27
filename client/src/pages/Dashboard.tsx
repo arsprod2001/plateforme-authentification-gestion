@@ -24,7 +24,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
-      {/* Effets neon en arrière-plan */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-500/10 to-transparent mix-blend-screen" />
       <div className="absolute w-96 h-96 bg-cyan-500/5 rounded-full -top-48 -left-48 blur-3xl animate-pulse" />
       <div className="absolute w-96 h-96 bg-purple-500/5 rounded-full -bottom-48 -right-48 blur-3xl animate-pulse delay-1000" />

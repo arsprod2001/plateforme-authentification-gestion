@@ -6,7 +6,6 @@ const api = axios.create({
   withCredentials: true
 });
 
-// Intercepteur pour ajouter le token
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('authToken');
   if (token) {
@@ -15,7 +14,6 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-// Intercepteur pour rafraîchir le token
 api.interceptors.response.use(
   response => response,
   async error => {
