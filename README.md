@@ -12,6 +12,6 @@
 
 ### 📋 Tableau de Bord
 
-![Capture d'écran de dashboard](./client/public/2.png)
+![Capture d'écran de dashboard](./client/public/4.png)
 
 
