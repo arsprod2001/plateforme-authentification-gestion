@@ -20,3 +20,5 @@ export default function ReCaptchaWidget({ onChange }: ReCaptchaWidgetProps) {
     />
   );
 }
+
+

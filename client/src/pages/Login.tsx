@@ -7,6 +7,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import api from '../services/api';
 
+
+
 const schema = z.object({
   email: z.string().email({ message: "Veuillez entrer un email valide" }),
   password: z.string().min(6, { message: "Le mot de passe doit contenir au moins 6 caractères" })
