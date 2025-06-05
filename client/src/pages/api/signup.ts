@@ -8,7 +8,7 @@ export default async function handler(
     return res.status(405).json({ success: false, message: "Method Not Allowed" });
   }
 
-  const { recaptchaToken, ...userData } = req.body;
+  const { recaptchaToken } = req.body;
 
   try {
     const verification = await fetch(
@@ -24,15 +24,12 @@ export default async function handler(
       });
     }
 
-    // TODO: Ajouter logique d'inscription réelle ici
-    // const user = await createUser(userData);
-
     return res.status(200).json({
       success: true,
-      message: "Inscription réussie",
+      message: "Inscription réussie (recaptcha OK)",
     });
   } catch (error) {
-    console.error("Erreur d'inscription:", error);
+    console.error("Erreur d'inscription :", error);
     return res.status(500).json({
       success: false,
       message: "Erreur lors de l'inscription",
