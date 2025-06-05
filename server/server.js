@@ -6,16 +6,11 @@ import { createServer } from 'http';
 
 const startServer = async () => {
   try {
-    // Connexion à la base de données Prisma
     await prisma.$connect();
-    
-    // Connexion à Redis
     await redis.connect();
 
-    // Création du serveur HTTP avec Express app
     const server = createServer(app);
 
-    // Démarrage du serveur
     server.listen(config.PORT, () => {
       console.log(`Server running on port ${config.PORT}`);
     });

@@ -3,7 +3,6 @@ import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import config from '../config/env.js';
 
-// Configuration CORS dynamique
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
@@ -30,7 +29,6 @@ const apiLimiter = rateLimit({
   legacyHeaders: false
 });
 
-// Configuration Helmet avancée
 const helmetConfig = helmet({
   contentSecurityPolicy: {
     directives: {

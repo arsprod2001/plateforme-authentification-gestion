@@ -14,10 +14,23 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+interface ApiError {
+  response?: {
+    data?: {
+      error?: string;
+    };
+  };
+}
+
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
+  
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors, isSubmitting } 
+  } = useForm<FormData>({
     resolver: zodResolver(schema)
   });
 
@@ -42,9 +55,15 @@ export default function Login() {
       await login(response.data.token);
       navigate('/dashboard');
       
-    } catch (error: any) {
+    } catch (error) {
       console.error('Login error:', error);
-      setApiError(error.response?.data?.error || 'Erreur de connexion');
+      
+      const apiError = error as ApiError;
+      setApiError(
+        apiError?.response?.data?.error || 
+        'Erreur de connexion. Veuillez réessayer.'
+      );
+      
       recaptchaRef.current?.reset();
       setRecaptchaToken(null);
     }
@@ -57,7 +76,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Effets neon en arrière-plan */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-500/10 to-transparent mix-blend-screen" />
       <div className="absolute w-96 h-96 bg-cyan-500/5 rounded-full -top-48 -left-48 blur-3xl animate-pulse" />
       <div className="absolute w-96 h-96 bg-purple-500/5 rounded-full -bottom-48 -right-48 blur-3xl animate-pulse delay-1000" />

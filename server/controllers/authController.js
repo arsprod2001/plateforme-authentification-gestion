@@ -25,22 +25,18 @@ class AuthController {
         return res.status(409).json({ error: 'Email déjà utilisé' });
       }
 
-      // Hachage mot de passe
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      // Création utilisateur
       const user = await prisma.user.create({
         data: { name, email, password: hashedPassword }
       });
 
-      // Génération JWT
       const token = jwt.sign(
         { userId: user.id },
         config.JWT_SECRET,
         { expiresIn: config.JWT_EXPIRES_IN }
       );
 
-      // Stockage Redis
       await redis.set(`user:${user.id}:token`, token);
 
       return res.status(201).json({
@@ -62,7 +58,6 @@ class AuthController {
     try {
       const { email, password, recaptchaToken } = req.body;
 
-      // Validation reCAPTCHA en production
       if (process.env.NODE_ENV === 'production') {
         const recaptchaResponse = await axios.post(
           `https://www.google.com/recaptcha/api/siteverify?secret=${config.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`
@@ -75,22 +70,18 @@ class AuthController {
         }
       }
 
-      // Vérification de l'existence de l'utilisateur
       const user = await prisma.user.findUnique({ where: { email } });
 
       if (!user) {
-        // Délai constant pour éviter timing attack
         await bcrypt.compare(password, '$2a$12$fakehashforsecurity');
         return res.status(401).json({ error: 'Identifiants invalides' });
       }
 
-      // Vérification mot de passe
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
         return res.status(401).json({ error: 'Identifiants invalides' });
       }
 
-      // Vérification tentative brute force
       const failedAttempts = await redis.get(`login:attempts:${user.id}`) || 0;
       if (failedAttempts >= 5) {
         return res.status(429).json({
@@ -98,7 +89,6 @@ class AuthController {
         });
       }
 
-      // Génération token JWT
       const token = jwt.sign(
         {
           userId: user.id,
@@ -111,13 +101,10 @@ class AuthController {
         }
       );
 
-      // Stockage token Redis
       await redis.set(`user:${user.id}:token`, token);
 
-      // Reset compteur tentatives
       await redis.del(`login:attempts:${user.id}`);
 
-      // Log connexion réussie
       await prisma.loginLog.create({
         data: {
           userId: user.id,
@@ -132,25 +119,23 @@ class AuthController {
         name: user.name,
         email: user.email,
         createdAt: user.createdAt,
-        lastLogin: new Date() // à adapter si lastLogin est en base
+        lastLogin: new Date() 
       };
 
-      // Set cookie sécurisé
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 3600000 // 1h
+        maxAge: 3600000 
       });
 
       return res.status(200).json({ user: userData, token });
     } catch (error) {
-      // Incrémenter compteur tentatives en cas d'erreur
       if (req.body.email) {
         const user = await prisma.user.findUnique({ where: { email: req.body.email } });
         if (user) {
           const attempts = await redis.incr(`login:attempts:${user.id}`);
-          await redis.expire(`login:attempts:${user.id}`, 900); // 15min
+          await redis.expire(`login:attempts:${user.id}`, 900); 
 
           await prisma.loginLog.create({
             data: {

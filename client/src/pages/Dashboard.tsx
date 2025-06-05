@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
-import { TrashIcon, PencilIcon, UserCircleIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import {
+  TrashIcon,
+  PencilIcon,
+  UserCircleIcon,
+  ArrowRightOnRectangleIcon,
+  PlusIcon
+} from '@heroicons/react/24/outline'
 
 interface User {
   id: number
@@ -97,13 +103,17 @@ export default function Dashboard() {
                     </td>
                     <td className="px-8 py-4 whitespace-nowrap text-sm text-cyan-300">{user.email}</td>
                     <td className="px-8 py-4 whitespace-nowrap">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        user.role === 'Admin' 
-                          ? 'bg-purple-500/20 text-purple-400' 
-                          : user.role === 'Manager' 
-                            ? 'bg-cyan-500/20 text-cyan-400' 
-                            : 'bg-green-500/20 text-green-400'
-                      }`}>
+                      <span
+                        className={`
+                          px-3 py-1 rounded-full text-sm font-medium ${
+                            user.role === 'Admin'
+                              ? 'bg-purple-500/20 text-purple-400'
+                              : user.role === 'Manager'
+                                ? 'bg-cyan-500/20 text-cyan-400'
+                                : 'bg-green-500/20 text-green-400'
+                          }
+                        `}
+                      >
                         {user.role}
                       </span>
                     </td>
@@ -143,20 +153,5 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
-  )
-}
-
-function PlusIcon(props: React.ComponentProps<'svg'>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2}
-      stroke="currentColor"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-    </svg>
   )
 }
